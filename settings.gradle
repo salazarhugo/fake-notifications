@@ -1,0 +1,2 @@
+rootProject.name = "Fake Notifications"
+include ':app'
