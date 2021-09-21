@@ -1,20 +1,27 @@
 package com.brock.fakenotifications.ui.main
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.EXTRA_NOTIFICATION_ID
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.brock.fakenotifications.R
-import com.brock.fakenotifications.databinding.MainFragmentBinding
 
 
 class MainFragment : Fragment() {
@@ -24,15 +31,22 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private val viewModel : MainViewModel by viewModels()
-    private lateinit var binding: MainFragmentBinding
+    private val viewModel: MainViewModel by viewModels()
+//    private lateinit var binding: MainFragmentBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        binding = MainFragmentBinding.inflate(inflater, container, false).apply {
+//        binding = MainFragmentBinding.inflate(inflater, container, false).apply {
+//        }
+
+        return ComposeView(requireContext()).apply {
+            setContent {
+
+            }
         }
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,8 +59,10 @@ class MainFragment : Fragment() {
 
         binding.apply {
             button.setOnClickListener {
-                createNotification(textInputName.text.toString(),
-                    textInputBody.text.toString())
+                createNotification(
+                    textInputName.text.toString(),
+                    textInputBody.text.toString()
+                )
             }
             button2.setOnClickListener {
 
@@ -56,37 +72,45 @@ class MainFragment : Fragment() {
         }
     }
 
+    @Composable
+    fun Notification(appName: String, title: String) {
+        Column {
+            Text(appName)
+            Text(title)
+        }
+    }
+
     private fun createNotification(appName: String, bodyText: String = "") {
-        // Create an explicit intent for an Activity in your app
-//        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-//            .setSmallIcon(R.drawable.ic_launcher_background)
-//            .setContentTitle(appName)
-//            .setContentText(bodyText)
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//            // Set the intent that will fire when the user taps the notification
-////            .setContentIntent(pendingIntent)
-//            .setAutoCancel(true)
-//
-//        with(NotificationManagerCompat.from(requireContext())) {
-//            // notificationId is a unique int for each notification that you must define
-//            notify(2, builder.build())
-//        }
-        val remoteViews = RemoteViews(requireContext().packageName, R.layout.notif_custom_view)
+        val remoteViews = RemoteViews(requireContext().packageName, R.layout.notif_instagram)
+
         remoteViews.setTextViewText(
             R.id.text_appname,
-            "Hugo"
+            "Instagram"
 //            context?.getString(if (true) R.string.app_name_alternative else R.string.app_name)
         )
-        remoteViews.setTextViewText(R.id.text_title, "This is my title")
-        remoteViews.setTextViewText(R.id.text_message, "This is my text")
+
+//        remoteViews.setTextViewText(R.id.text_title, "Serial console enabled")
+//        remoteViews.setTextViewText(R.id.text_message, "Performance is impacted. To disable, check bootloader.")
+        val snoozeIntent = Intent(requireContext(), Activity::class.java).apply {
+            action = ""
+            putExtra(EXTRA_NOTIFICATION_ID, 0)
+        }
+        val pendingIntent =
+            PendingIntent.getActivity(
+                requireContext(),
+                1,
+                snoozeIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
         val notificationBuilder = NotificationCompat.Builder(
             requireContext(), CHANNEL_ID
         )
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.ic_insta)
+            .addAction(R.drawable.ic_insta, getString(R.string.action_like), pendingIntent)
+            .addAction(R.drawable.ic_insta, getString(R.string.action_reply), pendingIntent)
             .setCustomContentView(remoteViews)
             .setColor(ContextCompat.getColor(requireContext(), R.color.purple_700))
-
         NotificationManagerCompat.from(requireContext()).notify(0, notificationBuilder.build())
     }
 
@@ -99,7 +123,8 @@ class MainFragment : Fragment() {
             description = descriptionText
         }
         // Register the channel with the system
-        val notificationManager = requireActivity().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            requireActivity().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 }

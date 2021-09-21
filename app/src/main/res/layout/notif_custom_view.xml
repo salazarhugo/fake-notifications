@@ -1,31 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:layout_marginLeft="16dp">
+    android:layout_marginLeft="16dp"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/googleg_standard_color_18">
+
+    </ImageView>
 
     <TextView
         android:id="@+id/text_appname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/image"
         android:paddingLeft="5dp"
         android:text="Appname"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textAppearance="@style/TextAppearance.Compat.Notification.Media"
         android:textSize="12sp" />
 
-    <TextView android:id="@+id/text_title"
+    <TextView
+        android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/text_appname"
         android:text="Title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_below="@id/text_appname"/>
+        android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+        android:textStyle="bold" />
 
-    <TextView android:id="@+id/text_message"
+    <TextView
+        android:id="@+id/text_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/text_title"
         android:text="Text"
-        android:layout_below="@id/text_title" />
+        android:textAppearance="@style/TextAppearance.Compat.Notification.Line2" />
 </RelativeLayout>
